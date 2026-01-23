@@ -1,0 +1,289 @@
+YouTube Automation System - Quick Reference Guide
+================================================
+
+PROJECT OVERVIEW
+================
+Automated system to scrape YouTube videos in the AI/Automation niche, analyze trends 
+and sentiment, and generate professional slide deck reports sent via Gmail.
+
+KEY FEATURES
+============
+✓ YouTube API v3 integration for metadata & statistics
+✓ Automatic transcript extraction
+✓ Sentiment analysis (VADER)
+✓ NLP-powered topic extraction (spaCy)
+✓ Engagement metrics & trending analysis
+✓ Professional PowerPoint report generation
+✓ Gmail automated delivery
+✓ Complete logging and error handling
+
+PROJECT STRUCTURE
+=================
+youtube_automation/
+├── config.py              # Configuration and settings
+├── data_collector.py      # YouTube API + transcript collection
+├── analyzer.py            # Sentiment, NLP, trends analysis
+├── report_generator.py    # Plotly visualizations + PowerPoint
+├── email_sender.py        # Gmail SMTP integration
+├── main.py               # Orchestration pipeline
+├── setup.py              # Setup verification script
+├── requirements.txt      # Python dependencies
+├── .env.example          # Environment configuration template
+├── README.md             # Full documentation
+└── data/                 # Output directory
+    ├── youtube_data.db   # SQLite database
+    ├── videos.csv        # Collected video metadata
+    ├── transcripts/      # Video transcript files
+    └── reports/          # Generated PowerPoint reports
+    └── charts/           # Visualization images
+
+QUICK START
+===========
+
+1. INSTALL DEPENDENCIES
+   pip install -r requirements.txt
+   python -m spacy download en_core_web_sm
+
+2. CONFIGURE CREDENTIALS
+   Copy .env.example to .env
+   Edit .env with your API keys:
+   - YouTube API key
+   - Gmail credentials (optional)
+
+3. VERIFY SETUP
+   python setup.py
+
+4. RUN PIPELINE
+   # Test mode (no email)
+   python main.py --skip-email
+   
+   # Full pipeline (with email)
+   python main.py
+   
+   # Custom search query
+   python main.py --query "LLM tutorials"
+
+5. VIEW RESULTS
+   - Data: data/videos.csv
+   - Reports: reports/YouTube_Trends_Report_*.pptx
+   - Logs: logs/youtube_automation.log
+
+API CREDENTIALS
+===============
+
+YouTube API:
+1. Go to https://console.cloud.google.com/
+2. Create new project
+3. Enable "YouTube Data API v3"
+4. Go to Credentials → Create API Key
+5. Copy key to .env: YOUTUBE_API_KEY=...
+
+Gmail App Password (for email delivery):
+1. Enable 2-Factor Authentication on Google account
+2. Go to https://myaccount.google.com/apppasswords
+3. Select "Mail" and "Windows Computer"
+4. Generate password
+5. Copy to .env: GMAIL_APP_PASSWORD=...
+
+COMMAND LINE OPTIONS
+====================
+
+python main.py
+  Run full pipeline (collect → analyze → report → email)
+
+python main.py --skip-email
+  Run everything except email delivery
+
+python main.py --query "your search query"
+  Use custom YouTube search query
+
+python main.py --recipient "email@example.com"
+  Send report to different email address
+
+python main.py --query "AI models" --skip-email
+  Combine multiple options
+
+INDIVIDUAL MODULE USAGE
+=======================
+
+Data Collection Only:
+  python data_collector.py
+
+Analysis Only:
+  python analyzer.py
+
+Report Generation Only:
+  python report_generator.py
+
+Email Sending Only:
+  python email_sender.py
+
+CONFIGURATION FILE
+==================
+
+Edit config.py to customize:
+
+SEARCH_QUERY = "AI automation"           # YouTube search
+MAX_VIDEOS_PER_SEARCH = 50               # Results limit
+DAYS_BACK = 30                           # Time window
+SENTIMENT_THRESHOLD_POSITIVE = 0.05      # Positive cutoff
+SENTIMENT_THRESHOLD_NEGATIVE = -0.05     # Negative cutoff
+MIN_ENGAGEMENT_THRESHOLD = 100           # Comments minimum
+
+REPORT GENERATION
+=================
+
+Slides included in PowerPoint report:
+1. Title slide with timestamp
+2. Executive summary statistics
+3. Engagement analysis chart
+4. Sentiment distribution pie chart
+5. Top industry themes
+6. Top performing channels
+7. Key takeaways & recommendations
+
+All charts are generated with Plotly and embedded as high-quality images.
+
+DATA OUTPUTS
+============
+
+videos.csv columns:
+- video_id, title, description
+- channel_id, channel_title
+- published_at
+- view_count, like_count, comment_count
+- duration
+- thumbnail_url
+- sentiment scores (compound, positive, negative, neutral)
+- engagement_score
+- transcript (full text)
+
+ANALYSIS METRICS
+================
+
+Sentiment Analysis:
+- Uses VADER (Valence Aware Dictionary and sEntiment Reasoner)
+- Optimized for social media and casual text
+- Scores: -1 (negative) to +1 (positive)
+
+Engagement Score:
+- Formula: (views × 0.5) + (likes × 2.0) + (comments × 3.0)
+- Higher weight on engagement vs. views
+
+Trending Videos:
+- Top 10 by engagement_score
+- Must have minimum engagement threshold
+
+Topics/Themes:
+- Named entity recognition (companies, products, people)
+- Noun phrase extraction
+- Most common terms across all videos
+
+Channel Analytics:
+- Total views, likes, comments
+- Video count
+- Average metrics per video
+
+TROUBLESHOOTING
+===============
+
+"API quota exceeded"
+→ Reduce MAX_VIDEOS_PER_SEARCH or run less frequently
+→ Distribute collection across multiple days
+
+"Transcripts disabled"
+→ System logs warning, continues with other videos
+→ Not all YouTube videos have transcripts enabled
+
+"Gmail authentication failed"
+→ Use App Password, not regular Google password
+→ Verify 2-Factor Authentication is enabled
+→ Check GMAIL_APP_PASSWORD in .env is correct
+
+"spaCy model not found"
+→ Run: python -m spacy download en_core_web_sm
+
+"No chart images in report"
+→ Ensure Plotly can save images (kaleido backend)
+→ pip install kaleido
+
+PERFORMANCE TIPS
+================
+
+✓ First run will be slower (downloads spaCy model, creates directories)
+✓ API calls are cached in data/videos.csv when possible
+✓ Adjust MAX_VIDEOS_PER_SEARCH based on API quota
+✓ Run during off-peak hours for faster processing
+✓ Use --skip-email for testing to avoid email quota issues
+
+SCHEDULING (Automation)
+=======================
+
+Linux/Mac - Add to crontab:
+0 8 * * * cd /path/to/youtube_automation && python main.py
+
+Windows - Use Task Scheduler:
+1. Create task with trigger
+2. Action: Run python.exe C:\path\to\youtube_automation\main.py
+
+Docker (optional):
+Build container with requirements.txt
+Run on schedule with docker run
+
+LOGGING
+=======
+
+Logs are saved to: logs/youtube_automation.log
+
+View recent logs:
+tail -f logs/youtube_automation.log
+
+Log levels:
+- INFO: Normal operation
+- WARNING: Issues that don't stop execution
+- ERROR: Major problems
+- DEBUG: Detailed diagnostic info
+
+DEPENDENCIES
+============
+
+Core:
+- google-auth-oauthlib    # YouTube API OAuth
+- google-api-python-client # YouTube API client
+- yt-dlp                   # Advanced video metadata
+- youtube-transcript-api   # Transcript extraction
+
+Analysis:
+- pandas                   # Data manipulation
+- numpy                    # Numerical operations
+- spacy                    # NLP (topics)
+- vaderSentiment          # Sentiment analysis
+
+Visualization:
+- plotly                   # Interactive charts
+- python-pptx             # PowerPoint generation
+
+Integration:
+- requests                # HTTP requests
+- beautifulsoup4          # HTML parsing
+
+NEXT STEPS
+==========
+
+1. Set up API credentials (.env file)
+2. Run: python setup.py
+3. Test: python main.py --skip-email
+4. Schedule: Add to cron/Task Scheduler
+5. Customize: Edit config.py for your needs
+6. Extend: Add more analysis in analyzer.py
+
+SUPPORT & DOCUMENTATION
+=======================
+
+See README.md for detailed documentation
+Check logs/youtube_automation.log for errors
+Review config.py for all available settings
+Inspect data/videos.csv for collected data format
+
+GitHub Issues: Report bugs and feature requests
+Documentation: See README.md for full API docs

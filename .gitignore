@@ -1,0 +1,101 @@
+# YouTube Automation System - Git Ignore
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project data
+data/
+reports/
+logs/
+*.db
+*.csv
+
+# Temporary files
+.cache/
+.pytest_cache/
+*.tmp
+temp/
+tmp/
+
+# OS specific
+Thumbs.db
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Generated files
+*.pptx
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# Credentials (NEVER commit)
+.aws/
+.credentials
+*.pem
+*.key
+client_secret*.json
+token.json
+credentials.json
+
+# IDE local settings
+.vscode/settings.json
+.vscode/launch.json
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+
+# Documentation generated
+site/
+docs/_build/
